@@ -19,6 +19,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
+          ref: 'master'
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
@@ -35,7 +36,7 @@ jobs:
             echo JS completed
             for i in **/*.css; do csso "$i" -o "$i" || echo "BAD CSS: $i"; done
             echo CSS completed
-            if [ ${{ github.event_name }} == "push" ]
+            if [ "${{ github.event_name }}" == "push" ]
             then
             GLOBIGNORE='HTML/**'
             fi
@@ -44,16 +45,12 @@ jobs:
             echo HTML completed
       - name: Git Shenanigans
         run: |
-            git stash -u -a
-            git checkout -b minified
-            git pull origin minified --no-rebase || :
-            git stash pop || :
-      - name: Auto commit minified files
-        uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          branch: "minified"
-          commit_message: "Github Action: Auto Minified files"
-          commit_user_name: Minifier
-          commit_user_email: KtaneContentMinifier@Timwi.de
-          commit_author: Minifier <KtaneContentMinifier@Timwi.de>
-          push_options: '--force'
+            git add .
+            git config user.email "KtaneContentMinifier@Timwi.de"
+            git config user.name "Minifier"
+            git commit -m "temp"
+            git reset --mixed origin/minified
+            git checkout -b minified origin/minified
+            git add .
+            git commit -m "Github Action: Auto Minified files - ${{ github.sha }}"
+            git push --progress --force origin minified
