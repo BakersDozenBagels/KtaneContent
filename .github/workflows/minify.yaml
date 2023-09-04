@@ -3,7 +3,7 @@ run-name: Minify ${{ github.run_number }} - ${{ github.sha }}
 on:
   push:
     branches:
-      - 'main'
+      - 'master'
   workflow_dispatch:
 jobs:
   generate:
