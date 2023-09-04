@@ -44,7 +44,7 @@
             float: right;
             clear: right;
             margin-left: .5cm;
-            line-height: 1.2;
+            line-height: 0.92;
         }
         div.diagram {
             margin-left: 1cm;
@@ -107,6 +107,7 @@
             #variety-order {
                 float: none;
                 margin: 0;
+                line-height: unset;
             }
 
             .layout {
@@ -126,6 +127,17 @@
             table.width-4 .maze-td svg {
                 width: 1.8cm;
             }
+        }
+
+        .knobs-table {
+            float: right;
+            margin-left: .5cm;
+            margin-bottom: .5cm;
+            margin-top: .25cm;
+        }
+        .knobs-table td, .knobs-table th {
+            padding: .1em .6em .05em;
+            text-align: left;
         }
     </style>
     <script>
@@ -148,7 +160,7 @@
             // LEDS
             let ledColors = ['K', 'R', 'Y', 'B', 'W'];
             let table = '';
-            table += `<tr>${ledColors.slice(1).map(lc => `<th>${lc}<${''}/th>`).join('')}<td class='corner'><${''}/td><${''}/tr>`;
+            table += `<tr>${ledColors.slice(1).map(lc => `<th>${lc}</th>`).join('')}<td class='corner'></td></tr>`;
             let allAnswers = [];
             for (let color1 = 0; color1 < ledColors.length - 1; color1++)
             {
@@ -160,9 +172,9 @@
                         answers = rnd.shuffleFisherYates(ledColors.slice(0)).slice(0, rnd.next(2, 6)).join(' ');
                     while (allAnswers.includes(answers));
                     allAnswers.push(answers);
-                    tr += `<td>${answers}<${''}/td>`;
+                    tr += `<td>${answers}</td>`;
                 }
-                table += `<tr>${tr}<th>${ledColors[color1]}<${''}/th><${''}/tr>`;
+                table += `<tr>${tr}<th>${ledColors[color1]}</th></tr>`;
             }
             document.getElementById('led-color-rules').innerHTML = table;
 
@@ -201,7 +213,7 @@
                 'Red switch',
                 'Yellow switch',
                 'White switch',
-                'Knob',
+                'White Knob',
                 'Red button',
                 'Yellow button',
                 'Blue button',
@@ -222,11 +234,22 @@
                 '3×4 maze (tall)',
                 '4×3 maze (wide)',
                 '4×4 maze',
-                'Letter display'
+                'Letter display',
+                'Light-on-Dark Die',
+                'Dark-on-Light Die',
+                'Timer (Ascending)',
+                'Timer (Descending)',
+                'Red Bulb',
+                'Yellow Bulb',
+                'White Bulb',
+                'Red Knob',
+                'Green Knob',
+                'Blue Knob',
+                'Yellow Knob'
             ];
             rnd.shuffleFisherYates(flavors);
             rnd.shuffleFisherYates(flavors);
-            vo.innerHTML = flavors.map(fl => `<li>${fl}<${''}/li>`).join('');
+            vo.innerHTML = flavors.map(fl => `<li>${fl}</li>`).join('');
         }
 
         function generateMaze(rnd, w, h)
@@ -354,7 +377,7 @@
                     <path d='${svg.join('')}' fill='none' stroke='black' stroke-width='.05' />
                     <path d='M0 0h${w}v${h}H0z' fill='none' stroke='black' stroke-width='.1' />
                     ${Array(w*h).fill(null).map((_, c) => `<rect class='highlightable' x='${c % w}' y='${(c / w) | 0}' width='1' height='1' fill='transparent' />`).join('')}
-                <${''}/svg>
+                </svg>
             `;
         }
 
@@ -435,7 +458,7 @@
                     <g fill='#5E4000' stroke='none'>
                         <rect x='${(cell1 % W) - .4}' y='${((cell1 / W) | 0) - .4}' width='.8' height='.8' />
                         <rect x='${(cell2 % W) - .4}' y='${((cell2 / W) | 0) - .4}' width='.8' height='.8' />
-                    <${''}/g>
+                    </g>
                     <path stroke-linecap='round' d='M${cell1 % W} ${(cell1 / W) | 0} ${cell2 % W} ${(cell2 / W) | 0}' fill='none' stroke='${this.WireColorsSvg[this.WireColors.indexOf(color)]}' stroke-width='.25' />
                 `;
             }
@@ -519,7 +542,7 @@
                         <circle cx='0' cy='0' r='.95' fill='#ddd' />
                         <circle cx='0' cy='0' r='.8' fill='#aaa' />
                         <path transform='scale(.02)' d='M -0.113281,-24.999993 A 15,15 0 0 0 -15,-9.999993 15,15 0 0 0 -7.058594,3.234382 L -15,35.000007 H 15 L 7.058594,3.236335 A 15,15 0 0 0 15,-9.999993 a 15,15 0 0 0 -15,-15 15,15 0 0 0 -0.113281,0 z' fill='black' />
-                    <${''}/g>
+                    </g>
                 `;
             }
         }
@@ -571,9 +594,8 @@
                         <circle cx='0' cy='0' r='.4' fill='#ccc' />
                         <path d='M-.2 0 h .4 L .4 -1.5 h -.8 z' />
                         <path d='M .4 -1.5 v -.2 h -.8 v .2 z' />
-                    <${''}/g>
+                    </g>
                 `;
-                return new Switch(module, cell, color);
             }
         }
 
@@ -604,7 +626,7 @@
                         ${ticks}
                         <path transform='scale(.55)' d='${this.KnobPathSvg}' fill='#ccc' stroke='black' stroke-width='.091' />
                         <path d='M0 -.6 .2 -.2 -.2 -.2z' transform='rotate(${360*((Math.random() * numTicks) | 0)/numTicks})' />
-                    <${''}/g>
+                    </g>
                 `;
             }
         }
@@ -653,7 +675,7 @@
                 for (let dot = 0; dot < 6; dot++)
                     dots += `<circle cx='${-.3 + .6*(dot % 2) + (location % W + .5)}' cy='${-.6 + .6*((dot / 2) | 0) + ((location / W) | 0) + 1}' r='.2' />`;
 
-                return `<rect fill='#581502' stroke='#C46058' stroke-width='.2' x='${location % W - .3}' y='${((location / W) | 0) - .2}' width='1.6' height='2.4' /><g fill='#471C12'>${dots}<${''}/g>`;
+                return `<rect fill='#581502' stroke='#C46058' stroke-width='.2' x='${location % W - .3}' y='${((location / W) | 0) - .2}' width='1.6' height='2.4' /><g fill='#471C12'>${dots}</g>`;
             }
         }
 
@@ -675,9 +697,9 @@
                 return `
                     <g transform='translate(${location % W + .5}, ${((location / W) | 0) + 1})'>
                         <rect fill='#253C96' stroke='#4B8EE6' stroke-width='.2' x='-.7' y='-1' width='1.4' height='2' />
-                        <text font-family='LCDClock' fill='#253365' x='.05' y='.8' text-anchor='middle' font-size='1.55'>8<${''}/text>
+                        <text font-family='LCDClock' fill='#253365' x='.05' y='.8' text-anchor='middle' font-size='1.55'>8</text>
                         <path d='M -.5 -1.1 .5 -1.1 0 -1.4 z M -.5 1.1 .5 1.1 0 1.4 z' fill='#EBB16A' />
-                    <${''}/g>
+                    </g>
                 `;
             }
         }
@@ -715,7 +737,7 @@
                         <path d='M-.3 .35 h 4.6 v .3 h -4.6 z' fill='none' stroke='black' stroke-width='.1' />
                         <path d='${ticks}' fill='none' stroke='black' stroke-width='.1' />
                         <path d='M${4*((Math.random() * numTicks) | 0)/(numTicks-1) - .25} -.2 h .5 v 1.4 h -.5 z' fill='#ccc' stroke='black' stroke-width='.05' />
-                    <${''}/g>
+                    </g>
                 `;
             }
         }
@@ -758,7 +780,7 @@
                             <path d='M${sf*x - slot.Width*sf/2 + sf/2 - ledW} ${sf*y - slot.Height*sf/2 + .35} h ${2*ledW} v ${ledH} h ${-2*ledW} z' fill='#292929' />
                         `;
 
-                return `<g transform='translate(${slot.TopLeft % W + slot.Width - .5}, ${((slot.TopLeft / W) | 0) + slot.Height - .5})'>${keycaps}<${''}/g>`;
+                return `<g transform='translate(${slot.TopLeft % W + slot.Width - .5}, ${((slot.TopLeft / W) | 0) + slot.Height - .5})'>${keycaps}</g>`;
             }
         }
 
@@ -805,7 +827,7 @@
                             <path d='M${sf*x - config.Width*sf/2 + sf/2 - ledW} ${sf*y - config.Height*sf/2 + .26} h ${2*ledW} v ${ledH} h ${-2*ledW} z' fill='#292929' />
                         `;
 
-                return `<g transform='translate(${config.TopLeftCell % W + (config.CWidth-1)/2}, ${((config.TopLeftCell / W) | 0) + (config.CHeight-1)/2})'>${keycaps}<${''}/g>`;
+                return `<g transform='translate(${config.TopLeftCell % W + (config.CWidth-1)/2}, ${((config.TopLeftCell / W) | 0) + (config.CHeight-1)/2})'>${keycaps}</g>`;
             }
         }
 
@@ -818,7 +840,7 @@
             NumShapes = 3*3;
             ShapeColors = [ '#FF3D3D', '#EBEE0B', '#3D94FF' ];
             Shapes = [
-                'M 0,-5 1.116792,-1.5371323 4.7552826,-1.5450848 1.8070074,0.58713227 2.9389262,4.0450851 0,1.9 l -2.9389264,2.1450849 1.131919,-3.45795261 -2.9482751,-2.13221739 3.6384905,0.00795 z',
+                'M 0,-5 1.116792,-1.5371323 4.7552826,-1.5450848 1.8070074,0.58713227 2.9389262,4.0450851 0,1.9 l -2.9389264,2.2550849 1.131919,-3.45795261 -2.9482751,-2.13221739 3.6384905,0.00795 z',
                 'M 0,-5 4.330127,2.5 l -8.6602541,0 z',
                 'm -1.5,-4 v 2.5 H -4 v 3 h 2.5 V 4 h 3 V 1.5 H 4 v -3 H 1.5 V -4 Z'
             ];
@@ -882,7 +904,7 @@
                 "M32.408 5.25L22.75 26.174v3.885l-2.193 4.384 4.384-2.193h-.04l9.849-21.34V5.25h-2.342z",
                 "M37.5 2.855l-2.25 2.249v27.292l2.25 2.249 2.25-2.249V5.104L37.5 2.855z",
                 "M5.104 32.75L2.855 35l2.249 2.25h9.837L19.443 35l-4.502-2.25H5.104z",
-                "M25.059 32.75L20.557 35l4.5 2.25h9.84L37.144 35l-2.249-2.25H25.06z",
+                "M25.059 32.75L20.557 35l4.5 2.25h9.84L37.254 35l-2.249-2.25H25.06z",
                 "M2.5 35.355L.25 37.604v27.292l2.25 2.249 2.25-2.249V37.604L2.5 35.355z",
                 "M19.443 35.557L15.06 37.75h.04L5.25 59.09v5.66h2.342l9.658-20.924v-3.885l2.193-4.384z",
                 "M20 35.557l-2.25 4.502V64.75h4.5V40.059L20 35.557z",
@@ -919,8 +941,217 @@
                         <path d='M -.5 1.1 .5 1.1 0 1.4 z' fill='#EBB16A' transform='translate(-1.035, 0)' />
                         <path d='M -.5 1.1 .5 1.1 0 1.4 z' fill='#EBB16A' />
                         <path d='M -.5 1.1 .5 1.1 0 1.4 z' fill='#EBB16A' transform='translate(1.035, 0)' />
-                    <${''}/g>
-                    <g transform='translate(${location % W + .02}, ${((location / W) | 0) + .2}) scale(.023)'>${letters}<${''}/g>
+                    </g>
+                    <g transform='translate(${location % W + .02}, ${((location / W) | 0) + .2}) scale(.023)'>${letters}</g>
+                `;
+            }
+        }
+
+        class DieFactory extends ItemFactory
+        {
+            Pips = [
+                "",
+                "<circle cx='0' cy='0' r='.1'/>",
+                "<circle cx='.25' cy='.25' r='.1'/><circle cx='-.25' cy='-.25' r='.1'/>",
+                "<circle cx='0' cy='0' r='.1'/><circle cx='.25' cy='.25' r='.1'/><circle cx='-.25' cy='-.25' r='.1'/>",
+                "<circle cx='.25' cy='.25' r='.1'/><circle cx='-.25' cy='-.25' r='.1'/><circle cx='-.25' cy='.25' r='.1'/><circle cx='.25' cy='-.25' r='.1'/>",
+                "<circle cx='0' cy='0' r='.1'/><circle cx='.25' cy='.25' r='.1'/><circle cx='-.25' cy='-.25' r='.1'/><circle cx='-.25' cy='.25' r='.1'/><circle cx='.25' cy='-.25' r='.1'/>",
+            ];
+
+            HSV(h, s, v) {
+                let r, g, b, i, f, p, q, t;
+                i = Math.floor(h * 6);
+                f = h * 6 - i;
+                p = v * (1 - s);
+                q = v * (1 - f * s);
+                t = v * (1 - (1 - f) * s);
+                switch (i % 6) {
+                    case 0:
+                        r = v, g = t, b = p;
+                        break;
+                    case 1:
+                        r = q, g = v, b = p;
+                        break;
+                    case 2:
+                        r = p, g = v, b = t;
+                        break;
+                    case 3:
+                        r = p, g = q, b = v;
+                        break;
+                    case 4:
+                        r = t, g = p, b = v;
+                        break;
+                    case 5:
+                        r = v, g = p, b = q;
+                        break;
+                }
+                r = (r * 255) | 0;
+                g = (g * 255) | 0;
+                b = (b * 255) | 0;
+                return r.toString(16).padStart(2, "0") + g.toString(16).padStart(2, "0") + b.toString(16).padStart(2, "0");
+            }
+
+            Generate(taken)
+            {
+                let avail = ["DieLOD", "DieDOL"].filter(s => !taken.has(s));
+                if (avail.length == 0)
+                    return null;
+
+                let locations = range(0, W * H).filter(tlc => this.isRectAvailable(taken, tlc, 2, 2));
+                if (locations.length === 0)
+                    return null;
+
+                let location = locations[(Math.random() * locations.length) | 0];
+                let style = avail[(Math.random() * avail.length) | 0];
+                this.claimRect(taken, location, 2, 2);
+                taken.add(style);
+
+                let pips = this.Pips[(Math.random() * 6) | 0];
+                let rot = (Math.random() * 4) | 0;
+
+                let c1 = this.HSV(Math.random(), Math.random() * .1 + .1, Math.random() * .1 + .8);
+                let c2 = this.HSV(Math.random(), Math.random() * .1 + .5, Math.random() * .1 + .1);
+                if(style === "DieLOD")
+                    [c1, c2] = [c2, c1];
+
+                // return `<circle r='.2' cx='8.88' cy='-2.04' fill="#000" />`
+                return `
+                    <g transform='translate(${location % W + .5}, ${((location / W) | 0) + .5}) rotate(${Math.atan2(2.54 + location / W, 8.38 - location % W) / Math.PI * -180 + 90 * rot})'>
+                        <path d='M -.3 -.55 0 -.83 .3 -.55 z' fill='#EBB16A' />
+                        <path d='M -.3 -.55 0 -.83 .3 -.55 z' fill='#EBB16A' transform='rotate(90)'/>
+                        <path d='M -.3 -.55 0 -.83 .3 -.55 z' fill='#EBB16A' transform='rotate(180)'/>
+                        <path d='M -.3 -.55 0 -.83 .3 -.55 z' fill='#EBB16A' transform='rotate(270)'/>
+                        <rect x='-.5' y='-.5' width='1' height='1' rx='.2' fill='#${c1}'/>
+                        <g fill="#${c2}">
+                            ${pips}
+                        </g>
+                    </g>
+                `;
+            }
+        }
+
+        class TimerFactory extends ItemFactory
+        {
+            Segments = [
+                "<path d='M .08 0.07m.07-.07 .26 0 .07 .07-.07 .07-.26 0-.07-.07z' fill='#{}'/>",
+                "<path d='M .07 0.08m-.07 .07 0 .26 .07 .07 .07-.07 0-.26-.07-.07z' fill='#{}'/>",
+                "<path d='M .49 0.08m-.07 .07 0 .26 .07 .07 .07-.07 0-.26-.07-.07z' fill='#{}'/>",
+                "<path d='M .08 0.49m.07-.07 .26 0 .07 .07-.07 .07-.26 0-.07-.07z' fill='#{}'/>",
+                "<path d='M .07 0.50m-.07 .07 0 .26 .07 .07 .07-.07 0-.26-.07-.07z' fill='#{}'/>",
+                "<path d='M .49 0.50m-.07 .07 0 .26 .07 .07 .07-.07 0-.26-.07-.07z' fill='#{}'/>",
+                "<path d='M .08 0.91m.07-.07 .26 0 .07 .07-.07 .07-.26 0-.07-.07z' fill='#{}'/>"
+            ];
+
+            SegmentMapping = [
+                [true,true,true,false,true,true,true],
+                [false,false,true,false,false,true,false],
+                [true,false,true,true,true,false,true],
+                [true,false,true,true,false,true,true],
+                [false,true,true,true,false,true,false],
+                [true,true,false,true,false,true,true],
+                [true,true,false,true,true,true,true]
+            ];
+
+            Generate(taken)
+            {
+                let avail = ["TimerA", "TimerD"].filter(s => !taken.has(s));
+                if (avail.length == 0)
+                    return null;
+
+                let locations = range(0, W * H).filter(tlc => this.isRectAvailable(taken, tlc, 2, 2));
+                if (locations.length === 0)
+                    return null;
+
+                let location = locations[(Math.random() * locations.length) | 0];
+                let style = avail[(Math.random() * avail.length) | 0];
+                this.claimRect(taken, location, 2, 2);
+                taken.add(style);
+
+                let i = (Math.random() * 4) | 0;
+                let maxs = [[2,3,5,7],[2,3,5],[2,3],[7]];
+                let maxA = maxs[0][i];
+                let maxB = maxs[i][(Math.random() * maxs[i].length) | 0];
+                let A = (Math.random() * maxA) | 0;
+                let B = (Math.random() * maxB) | 0;
+
+                return `
+                    <g transform='translate(${location % W - .5}, ${((location / W) | 0) - .5})'>
+                        <rect x='.3' y='.3' width='1.4' height='1.4' fill='#17144E' stroke='#aaa' stroke-width='.2' rx='.1'/>
+                        <g fill='#${["DFF3FF", "292E31"][(Math.random() * 2) | 0]}'>
+                            <path d='M 1 .8m-.07-.07 0-.07 .07-.07 .07 .07 0 .07-.07 .07z'/>
+                            <path d='M 1 1.2m-.07 .07 0 .07 .07 .07 .07-.07 0-.07-.07-.07z'/>
+                        </g>
+                        <g transform='translate(.5 .5) scale(.7 1)'>${range(0,7).map(i => this.Segments[i].replace("{}", this.SegmentMapping[A][i] ? "DFF3FF" : "292E31")).join("")}</g>
+                        <g transform='translate(1.108 .5) scale(.7 1)'>${range(0,7).map(i => this.Segments[i].replace("{}", this.SegmentMapping[B][i] ? "DFF3FF" : "292E31")).join("")}</g>
+                    </g>
+                `;
+            }
+        }
+
+        class BulbFactory extends ItemFactory
+        {
+            Generate(taken)
+            {
+                let avail = ["BulbY", "BulbW", "BulbR"].filter(s => !taken.has(s));
+                if (avail.length == 0)
+                    return null;
+
+                let locations = range(0, W * H).filter(tlc => this.isRectAvailable(taken, tlc, 2, 2));
+                if (locations.length === 0)
+                    return null;
+
+                let location = locations[(Math.random() * locations.length) | 0];
+                let style = avail[(Math.random() * avail.length) | 0];
+                this.claimRect(taken, location, 2, 2);
+                taken.add(style);
+
+                let color = 
+                    style == "BulbY" ? ["806A00", "FFD500"] :
+                    style == "BulbW" ? ["808080", "FFF"] :
+                    ["800000", "F00"];
+
+                return `
+                    <g transform='translate(${location % W + .5}, ${((location / W) | 0) + .5}) rotate(${Math.random()*360})'>
+                        <circle cx='0' cy='0' r='.6' fill='#EBB16A'/>
+                        <path fill='#${color[(Math.random() * 2) | 0]}' transform='scale(0.03)' d='M.4422 19.0468c5.432-.1402 10.4722-2.8575 13.9304-6.7124 1.7727-1.9791 3.1538-4.334 3.646-7.0433a10.8982 10.8982 0 0 0-1.9183-8.2946C13.629-6.3823 9.9805-8.4936 6.263-8.1444 2.5483-7.7951-.4653-5.4721-2.9577-2.395l5.924 4.7942C4.6942.2641 6.2208-.4848 6.9775-.556c.7541-.0715 1.5055.0476 2.9713 2.0505.6562.8996.7409 1.5081.5715 2.4341-.1693.9287-.7726 2.1485-1.823 3.318C6.705 9.4688 3.194 11.2468.4317 11.4161m-.4297 7.631a19.1 19.1 0 0 0 19.05-19.05 19.1 19.1 0 0 0-19.05-19.05c-5.6 0-10.81 2.76-14.36 6.72a14.5 14.5 0 0 0-3.65 7.04c-.5 2.71.1 5.8 1.92 8.3 2.47 3.38 6.12 5.49 9.83 5.14 3.72-.35 6.73-2.67 9.22-5.75l-5.92-4.8c-1.73 2.14-3.26 2.89-4.01 2.96-.75.07-1.5-.05-2.97-2.05a2.73 2.73 0 0 1-.57-2.44 7.3 7.3 0 0 1 1.82-3.31c2.1-2.34 5.87-4.19 8.7-4.19 6.35 0 11.42 5.08 11.42 11.43 0 6.36-5.07 11.43-11.43 11.43m.4297-.011A11.3718 11.3718 0 0 1-11.4217-.0005a11.3718 11.3718 0 0 1 11.4274-11.43v-7.62c-10.4775 0-19.05 8.5751-19.05 19.05 0 10.4775 8.5725 19.05 19.05 19.05l.4365-.0026'/>
+                        <path stroke='#000' transform='scale(0.03)' fill='none' stroke-width='1.6' d='M.4422 19.0468c5.432-.1402 10.4722-2.8575 13.9304-6.7124 1.7727-1.9791 3.1538-4.334 3.646-7.0433a10.8982 10.8982 0 0 0-1.9183-8.2946C13.629-6.3823 9.9805-8.4936 6.263-8.1444 2.5483-7.7951-.4653-5.4721-2.9577-2.395m5.924 4.7942C4.6942.2641 6.2208-.4848 6.9775-.556c.7541-.0715 1.5055.0476 2.9713 2.0505.6562.8996.7409 1.5081.5715 2.4341-.1693.9287-.7726 2.1485-1.823 3.318C6.705 9.4688 3.194 11.2468.4317 11.4161m-.4253 7.633a19.195 19.195 0 0 0 .473-.007m0 0c10.3217-.2828 18.55-8.7174 18.577-19.043-.0275-10.5096-8.5404-19.0225-19.05-19.05-5.6 0-10.81 2.76-14.36 6.72a14.5 14.5 0 0 0-3.65 7.04c-.5 2.71.1 5.8 1.92 8.3 2.47 3.38 6.12 5.49 9.83 5.14 3.72-.35 6.73-2.67 9.22-5.75m-5.918-4.7982-.002-.0018c-1.73 2.14-3.26 2.89-4.01 2.96-.75.07-1.5-.05-2.97-2.05a2.73 2.73 0 0 1-.57-2.44 7.3 7.3 0 0 1 1.82-3.31c2.1-2.34 5.87-4.19 8.7-4.19 3.2092 0 6.0914 1.2976 8.1576 3.4008M1.2252 11.3664a11.805 11.805 0 0 1-1.2188.0628m.4209-.015a11.4057 11.4057 0 0 1-.4135.01m0 0A11.3718 11.3718 0 0 1-8.1684 8.02m-8.917-16.4195-.0046.0094c-1.2533 2.5345-1.9586 5.3828-1.9586 8.3874 0 10.4775 8.5725 19.05 19.05 19.05l.4365-.0026'/>
+                    </g>
+                `;
+            }
+        }
+
+        class ColoredKnobFactory extends ItemFactory
+        {
+            Generate(taken)
+            {
+                let avail = ["KnobR", "KnobY", "KnobB", "KnobK"].filter(s => !taken.has(s));
+                if (avail.length == 0)
+                    return null;
+
+                let locations = range(0, W * H).filter(tlc => this.isRectAvailable(taken, tlc, 2, 2));
+                if (locations.length === 0)
+                    return null;
+
+                let location = locations[(Math.random() * locations.length) | 0];
+                let style = avail[(Math.random() * avail.length) | 0];
+                this.claimRect(taken, location, 2, 2);
+                taken.add(style);
+
+                let color = 
+                    style == "KnobY" ? "D0D033" :
+                    style == "KnobR" ? "FF3F3F" :
+                    style == "KnobB" ? "3F3FFF" :
+                    "2F2F2F";
+
+                return `
+                    <g transform='translate(${location % W + .5}, ${((location / W) | 0) + .5}) rotate(${((Math.random()*8) | 0) * 45})' stroke='#000' stroke-width='.1'>
+                        <circle cx='0' cy='0' r='.7' fill='#${color}'/>
+                        <path d='M.2-.7 .2 .7'/>
+                        <path d='M-.2-.7-.2 .7'/>
+                        <path d='M0 .7 0 .3' stroke='#fff'/>
+                        <!-- Hides a tiny imperfection with the tick-mark -->
+                        <circle cx='0' cy='0' r='.7' fill='none'/>
+                    </g>
                 `;
             }
         }
@@ -940,7 +1171,11 @@
                 { weight: 7, factory: new KeypadFactory() },
                 { weight: 7, factory: new ColoredKeypadFactory() },
                 { weight: 10, factory: new MazeFactory() },
-                { weight: 10, factory: new LetterDisplayFactory() }
+                { weight: 10, factory: new LetterDisplayFactory() },
+                { weight: 1, factory: new DieFactory() },
+                { weight: 2, factory: new TimerFactory() },
+                { weight: 2, factory: new BulbFactory() },
+                { weight: 2, factory: new ColoredKnobFactory() }
             ];
 
             // Decide what’s going to be on the module
@@ -978,27 +1213,33 @@
             rndNumber %= 1000000000000n;
             document.getElementById('dynamic-number').textContent = rndNumber;
 
+            let componentTypes = arrayShuffle(["knobs", "sliders", "letters", "timers", "dice", "bulbs", "buttons", "keypads", "mazes", "wires", "switches", "LEDs", "Braille", "keys in locks", "7-segment displays"]);
+            // The extra space in " LED" will get collapsed when we do x.slice(1) later.
+            let componentTypesSingular = arrayShuffle([" knob", " slider", " letter display", " timer", " die", " bulb", " button", " keypad", " maze", " wire", " switch", "n LED", " Braille display", " key in lock", " 7-segment display"]);
+            // Extra spaces will get collapsed.
+            let colors = arrayShuffle(["red", "yellow", "blue", "white", "black", "", "", "", "", ""]);
+
             let flavourTexts = [
                 'What does it want from me this time?',
                 'There is a grace in wild variety surpassing rule and order.',
                 'Every time I run across this module, I wonder how long I’ve been gone for.',
                 'YOU’RE ALONE IN A ROOM WITH A BOMB. Your friends have the info you need to defuse it. But there’s a catch. They can’t see the bomb. So everyone will need to talk it out–fast!',
                 'You matter. Unless you multiply yourself by the speed of light squared, then you energy.',
-                'change difference diversification diversity heterogeneity many-sidedness multifariousness variation',
-                'Take the yellow switch and turn the button when the LED matches the blue number of the keypad’s slider.',
+                arrayShuffle(['change', 'difference', 'diversification', 'diversity', 'heterogeneity', 'many-sidedness', 'multifariousness', 'variation']).join(" "),
+                `Take the ${colors[0]} ${componentTypesSingular[0].slice(1)} and ${["turn", "press", "twist", "slide", "rotate", "switch", "flip", "flick", "set", "mash", "hold", "release"][(Math.random() * 12) | 0]} the ${colors[1]} ${componentTypesSingular[1].slice(1)} when the ${colors[2]} ${componentTypesSingular[2].slice(1)} matches the ${[`${colors[3]} number`, `${colors[3]} letter`, `orientation`, `${colors[3]} position`, `sound`, `${colors[3]} dot`, `${colors[3]} indicator`, `${colors[3]} ${componentTypesSingular[3].slice(1)}`][(Math.random() * 8) | 0]} of the ${colors[4]} ${componentTypesSingular[4].slice(1)}’s ${colors[5]} ${componentTypesSingular[5].slice(1)}.`,
                 'Life is like a box of chocolates. You never know what you’re gonna get.',
                 'Module Designed By Committee™',
                 'Note: Each copy of this manual is unique. Please ensure that you have an authentic copy.',
-                'This doesn’t feel right... and it definitely doesn’t look right.',
-                'You are in a maze of twisty... knobs? Nothing’s alike.',
+                'This doesn’t feel right… and it definitely doesn’t look right.',
+                `You are in a maze of ${["twisty", "moving", "confusing", "ticking", "rolling", "flashing", "clicking", "square", "smaller", "charged", "flicky", "blinking", "raised", "turning", "numeric"][(Math.random() * 15) | 0]}… ${["knobs", "sliders", "letters", "timers", "dice", "bulbs", "buttons", "keypads", "mazes", "wires", "switches", "LEDs", "Braille", "keys", "displays"][(Math.random() * 15) | 0]}? Nothing’s alike.`,
                 `A 1 in ${rndNumber} chance.`,
                 'So I met a programmer who couldn’t tell the difference between the different vowels. He pointed to: ‘var i’. “it E?” he asked.',
-                'There are 10 types of people. Those who like sliders, those who like buttons, those who like keypads, those who like mazes, those who like wires, those who like switches, those who like LEDs, those who like Braille, those who like keys in locks and those who like 7-segment displays.',
+                `There are 10 types of people. Those who like ${range(0, 9).map(i => componentTypes[i]).join(", those who like ")}, and those who like ${componentTypes[9]}.`,
                 'Did the fact that this module keeps changing just jump out at you?',
                 'Press F5. A lot. You’re welcome.',
                 'Life hack: Write down every possible arrangement of items so you will be ready next time!',
-                'I swear that module didn’t have a maze last time I looked...',
-                'Three time’s the charm, but this is like... 10 times?',
+                `I swear that module didn’t have a${componentTypesSingular[0]} last time I looked…`,
+                'Three time’s the charm, but this is like… 10 times?',
                 `You know what my favourite number is? ${rndNumber}.`,
                 'This module was manufactured by compulsively obsessed electronics-loving people with no self-control or discipline.',
                 'I welcome change as long as nothing is altered or different.',
@@ -1008,13 +1249,88 @@
                 'It’s missing a toilet paper holder and a kitchen sink. Oh and, how do I place a call?',
                 'Plus ça change, plus c’est la même chose.',
                 '47% of the time, it works every time.',
-                'Strength lies in differences... and this module has plenty of that.',
+                'Strength lies in differences… and this module has plenty of that.',
                 'A real Pollock of a module.',
                 'Originally planned to be called “Diversity” before our marketing team realized it sounds like it starts with “Die”.',
-                'Variety backwards... is variety!',
+                'Variety backwards… is variety!',
                 'Worth 13 points in Scrabble.',
                 'A module inducing anxiety was unleashed upon our society. With sliders and knobs and some bits and bobs, it rapidly gained notoriety.',
-                'Who even reads these?'
+                'Who even reads these?',
+                'There was a young lady named Sue, Whose taste in things was quite new; She liked them all, From big to real small; Variety excited her true.',
+                'Okay, who asked an AI to design a module?',
+                'Variety is the spice of life, but too much spice can make you sick.',
+                'The world is a pretty big place. Don’t limit yourself to just one flavor.',
+                'Life is a journey, not a destination. So enjoy the variety along the way.',
+                arrayShuffle(['cake', 'pie', 'cinnamon roll', 'cheesecake', 'tiramisu', 'brownie', 'cookie']).map(s => `The ${s} is a lie.`).join(" "),
+                `There are about ${rndNumber} things that would be better than this right now.`,
+                'The world is a stage. So don’t be afraid to play different roles.',
+                'The only thing that’s constant in life is change.',
+                'The world is a big place. Don’t limit yourself to just one thing.',
+                'Life is a roller coaster. So enjoy the ups and downs.',
+                '01010110010000010101001001001001010001010101010001011001',
+                `You put your ${componentTypesSingular[0].slice(1)} in, you put your ${componentTypesSingular[0].slice(1)} out, you put your ${componentTypesSingular[0].slice(1)} in, and you shake it all about. You do the Hokey Pokey and you turn yourself around. That's what it's all about!`,
+                'Has everything in the kitchen sink, and then some.',
+                'Variety is not the enemy of order. It is the essential ingredient.',
+                'Chaos is what happens when order breaks down. But chaos is also what makes new things possible.',
+                'The only way to make sense out of change is to plunge into it, move with it, and join the dance.',
+                'Life is a game of chance. The more chances you take, the better your odds of winning.',
+                'The future is not an inevitability. It is a possibility.',
+                'Creativity is the ability to introduce order into the randomness of nature.',
+                'Change is inevitable, but growth is optional. Choose to grow.',
+                'Change is the law of life. And those who look only to the past or present are certain to miss the future.',
+                'The measure of intelligence is the ability to change.',
+                `${rndNumber + 3n}… ${rndNumber + 2n}… ${rndNumber + 1n}… ${rndNumber}…`,
+                [   // Vanilla/famous flavor texts are pooled to make them less common.
+                    // Vanillas:
+                    'You might think that a button telling you to press it is pretty straightforward. That’s the kind of thinking that gets people exploded.', // The Button
+                    'I’m going to guess that this is just meant to occupy your attention, because otherwise this is some shoddy electronics work.', // Capacitor Discharge
+                    'These wires aren’t like the others. Some have stripes! That makes them completely different. The good news is that we’ve found a concise set of instructions on what to do about it! Maybe too concise…', // Complicated Wires
+                    'I’m not sure what these symbols are, but I suspect they have something to do with occult.', // Keypad
+                    'Needlessly complicated and endlessly needy. Imagine if such expertise were used to make something other than diabolical puzzles.', // The Knob
+                    'This seems to be some kind of maze, probably stolen off of a restaurant placemat.', // Maze
+                    'Memory is a fragile thing but so is everything else when a bomb goes off, so pay attention!', // Memory
+                    'An antiquated form of naval communication? What next? At least it’s genuine Morse Code, so pay attention and you might just learn something.', // Morse Code
+                    'Fortunately this password doesn’t seem to meet standard government security requirements: 22 characters, mixed case, numbers in random order without any palindromes above length 3.', // Password
+                    'Computer hacking is hard work! Well, it usually is. This job could probably be performed by a simple drinking bird pressing the same key over and over again.', // Venting Gas
+                    'This contraption is like something out of a sketch comedy routine, which might be funny if it wasn’t connected to a bomb. I’ll keep this brief, as words only complicate matters.', // Who's On First
+                    'Wires are the lifeblood of electronics! Wait, no, electricity is the lifeblood. Wires are more like the arteries. The veins? No matter…', // Wires
+                    'It’s hard to say how this mechanism works. The engineering is pretty impressive, but there must have been an easier way to manage nine wires.', // Wire Sequence
+                    'This is like one of those toys you played with as a kid where you have to match the pattern that appears, except this one is a knockoff that was probably purchased at a dollar store.', // Simon Says
+                    // Mods:
+                    'This one likes attention, but not too much attention.', // Forget Me Not
+                    'It’s easy to identify colours. Red, Blue, Green, etc. Turns out it’s a bit harder when you display a word colour in a different colour though…', // Colour Flash
+                    'Something to remember your explosion by.', // Souvenir
+                    'Ground control to Major Tom, do you read?', // Black Hole
+                    'This device looks like it was recovered from an alien spacecraft. It moves in strange ways. What does it want from us?', // The Hypercube
+                    'What’s this game called? Ok, let’s do that.', // Filibuster
+                    'Randomly punching in the letters will eventually give me another word. One of the arrangements must work, right?', // Anagrams
+                    'This poorly programmed lookup device is as maddening with its slow responses as it is unforgiving with ill-timed inputs. Patience required.', // Two Bits
+                    'Nothing. Literally nothing. Blank. Nada.', // Crazy Talk
+                ][(Math.random() * 23) | 0],
+                `${capitalize(componentTypes[0])} are the lifeblood of bombs! Wait, no, ${componentTypes[1]} are the lifeblood. Or was it ${componentTypes[2]}? ${capitalize(componentTypes[3])}? No matter…`,
+                `...- .- .-. .. . - -.--`,
+                `Even my ${(Math.random() * 3 + 1) | 0}-year-old ${["son", "daughter", "child"][(Math.random() * 3) | 0]} couldn’t make something weirder than this.`,
+                range(0, 8).map(i => capitalize(arrayShuffle(['v', 'a', 'r', 'i', 'e', 't', 'y']).join(""))).join(", ") + "…",
+                [ // Again, twitch help messages are pooled to make them less common.
+                    `!${rndNumber} horiz/vert 0 [set horizontal/vertical slider]`,
+                    `!${rndNumber} key 0 [turn the key-in-lock at last timer digit]`,
+                    `!${rndNumber} 1x3 keys 012 [press keys on the 1×3 white keypad in that order]`,
+                    `!${rndNumber} red keys 01 [press those keys on the red keypad]`,
+                    `!${rndNumber} knob 0 [turn the white knob to that many tickmarks from north]`,
+                    `!${rndNumber} red button mash 3 [mash the red button that many times] | !${rndNumber} red button hold 2 [hold the red button over that many timer ticks]`,
+                    `!${rndNumber} digit 0 [set the digit display]`,
+                    `!${rndNumber} cut blue [cut a wire]`,
+                    `!${rndNumber} led white [set the LED to white] | !${rndNumber} led reset [show flashing colors again]`,
+                    `!${rndNumber} red switch 0 [toggle red switch to up]`,
+                    `!${rndNumber} letters cycle [cycle each letter slot] | !${rndNumber} letters ACE [set letter display]`,
+                    `!${rndNumber} braille 125 [set Braille display]`,
+                    `!${rndNumber} 3x3 maze UDLR [make moves in the 3×3 maze]`,
+                    `!${rndNumber} die 1234 [press the rotation buttons; buttons are numbered from the one pointing towards the status light going clockwise]`,
+                    `!${rndNumber} ascending timer 02 [stops the timer at that value] | !${rndNumber} ascending timer reset [restarts the timer running]`,
+                    `!${rndNumber} red bulb ..- [transmit ..- on the red bulb] | !${rndNumber} red bulb reset [show flashing code again]`,
+                    `!${rndNumber} red knob 0 [turn knob that many times] !${rndNumber} red knob cycle [turn the knob slowly]`,
+                ][(Math.random() * 17) | 0],
+                'Truly, change is a beautiful thing.',
             ];
             document.getElementsByClassName('flavour-text')[0].innerText = flavourTexts[(Math.random() * flavourTexts.length) | 0];
 
@@ -1022,6 +1338,23 @@
             for (let pIx = 0; pIx < pages.length; pIx++)
                 pages[pIx].className = `page page-bg-0${(Math.random() * 7 + 1) | 0}`;
         });
+
+        function arrayShuffle(list) {
+            var i = list.length;
+            while (i > 1)
+            {
+                var index = (Math.random() * i) | 0;
+                i--;
+                var value = list[index];
+                list[index] = list[i];
+                list[i] = value;
+            }
+            return list;
+        }
+
+        function capitalize(s) {
+            return s.slice(0, 1).toUpperCase() + s.slice(1);
+        }
     </script>
 </head>
 <body>
@@ -1047,9 +1380,12 @@
 
                 <p class="flavour-text">What does it want from me this time?</p>
 
-                <p>Begin with a list of the items on the module, sorted into the order shown <span class='wide'>on the right</span><span class='narrow'>below</span>.</p>
+                <p class="narrow">Begin with a list of the items on the module, sorted into the order shown below.</p>
 
-                <ul id="variety-order"><li>Yellow wire</li><li>Blue switch</li><li>LED</li><li>4×4 maze</li><li>Vertical slider</li><li>Blue wire</li><li>Knob</li><li>Red switch</li><li>3×4 maze (tall)</li><li>Blue button</li><li>Yellow switch</li><li>Red keypad</li><li>Yellow button</li><li>Key-in-lock</li><li>4×1 white keypad (wide)</li><li>Blue keypad</li><li>4×3 maze (wide)</li><li>1×4 white keypad (tall)</li><li>2×2 white keypad</li><li>Black wire</li><li>Horizontal slider</li><li>White switch</li><li>Red wire</li><li>White wire</li><li>Yellow keypad</li><li>Red button</li><li>Letter display</li><li>White button</li><li>3×3 maze</li><li>Digit display</li><li>Braille display</li><li>3×1 white keypad (wide)</li><li>1×3 white keypad (tall)</li></ul>
+                <ul id="variety-order"><li>White Bulb</li><li>Yellow switch</li><li>Red switch</li><li>3×1 white keypad (wide)</li><li>Yellow wire</li><li>White wire</li><li>Red button</li><li>White switch</li><li>3×3 maze</li><li>Yellow Bulb</li><li>Yellow keypad</li><li>Black wire</li><li>Braille display</li><li>Red Bulb</li><li>Letter display</li><li>Blue switch</li><li>Blue Knob</li><li>Red Knob</li><li>Horizontal slider</li><li>Yellow button</li><li>Blue wire</li><li>Red wire</li><li>Digit display</li><li>White Knob</li><li>Key-in-lock</li><li>Green Knob</li><li>Blue button</li><li>Dark-on-Light Die</li><li>4×1 white keypad (wide)</li><li>Yellow Knob</li><li>Vertical slider</li><li>Blue keypad</li><li>1×3 white keypad (tall)</li><li>Timer (Ascending)</li><li>1×4 white keypad (tall)</li><li>3×4 maze (tall)</li><li>2×2 white keypad</li><li>LED</li><li>White button</li><li>4×4 maze</li><li>Red keypad</li><li>Light-on-Dark Die</li><li>Timer (Descending)</li><li>4×3 maze (wide)</li></ul>
+
+                <!-- With the longest flavor text, #variety-order would be moved slightly down, which breaks the formatting. -->
+                <p class="wide">Begin with a list of the items on the module, sorted into the order shown on the right.</p>
 
                 <p>Observe the number displayed at the top of the module. Decoding this number involves an iterative process.
                     In each iteration, a number <var>n</var> is relevant. Perform these calculations:</p>
@@ -1077,7 +1413,7 @@
                     cut wire causes a strike, an item may need to have its state changed and changed back to disarm the module.</p>
 
             </div>
-            <div class="page-footer relative-footer">Page 1 of 5</div>
+            <div class="page-footer relative-footer">Page 1 of 6</div>
         </div>
         <div class="page">
             <div class="page-header">
@@ -1087,7 +1423,7 @@
             <div class="page-content">
                 <div class='layout'>
                     <div>
-                        <h3>Knobs</h3>
+                        <h3>White Knobs</h3>
                         <p><var>n</var> is the number of tickmarks. The states are numbered from 0 going clockwise.
                             To find out which tickmark is state 0, start with the up-facing tickmark and move clockwise
                             a number of tickmarks equal to the numeric value of the first character
@@ -1140,7 +1476,7 @@
                     </div>
                 </div>
             </div>
-            <div class="page-footer relative-footer">Page 2 of 5</div>
+            <div class="page-footer relative-footer">Page 2 of 6</div>
         </div>
         <div class="page">
             <div class="page-header">
@@ -1188,11 +1524,64 @@
                         <h3>Braille displays</h3>
                         <p><var>n</var> is the number of distinct characters in the serial number.
                             The value identifies which of those characters to input in <a href='https://ktane.timwi.de/HTML/Braille.html'>Braille</a>, numbered from 0 based on their first occurrence. Digits are input
-                            as 1=A, ..., 9=I, 0=J, except shifted down one row.</p>
+                            as 1=A, …, 9=I, 0=J, except shifted down one row.</p>
                     </div>
                 </div>
             </div>
-            <div class="page-footer relative-footer">Page 3 of 5</div>
+            <div class="page-footer relative-footer">Page 3 of 6</div>
+        </div>
+        <div class="page">
+            <div class="page-header">
+                <span class="page-header-doc-title">Keep Talking and Nobody Explodes Mod</span>
+                <span class="page-header-section-title">Variety</span>
+            </div>
+            <div class="page-content">
+                <div class='layout'>
+                    <div>
+
+                        <h3>Keys-in-lock</h3>
+                        <p><var>n</var> is 10. Turn the key clockwise when the last seconds digit of the bomb’s timer equals the value.</p>
+                    </div>
+                    <div>
+                        <h3>Switches</h3>
+                        <p><var>n</var> is the number of positions the switch can be toggled to (between 2 and 4).
+                            These positions are numbered from 0 starting from the full “up” position.</p>
+                    </div>
+                    <div>
+                        <h3>Timers</h3>
+                        <p><var>n</var> is the maximum displayed time. Possible times are numbered from 0 at 0:0 going up.
+                            Press the timer to stop it at the obtained time, or again to restart the timer.</p>
+                    </div>
+                    <div>
+                        <h3>Dice</h3>
+                        <p><var>n</var> is 24. Rotate the cube such that faced labeled with the value modulo six is visible,
+                            and a particular face is pointing towards the status light. That face is the possible one with the
+                            <var>p</var>th smallest label, where <var>p</var> is the value divided by 6 (rounded down).</p>
+                    </div>
+                    <div>
+                        <h3>Colored Knobs</h3>
+                        <table class="knobs-table">
+                            <tr><th>Color</th><th>Dir</th></tr>
+                            <tr><td>Red</td><td>North</td></tr>
+                            <tr><td>Black</td><td>East</td></tr>
+                            <tr><td>Blue</td><td>South</td></tr>
+                            <tr><td>Yellow</td><td>West</td></tr>
+                        </table>
+                        <p>The knob clicks when it is turned to one of 8 positions. At <var>n</var> places, this click is
+                            louder. These loud clicks are numbered starting from 0 at the position in the table going clockwise.</p>
+                    </div>
+                    <div>
+                        <h3>Bulbs</h3>
+                        <p>The bulb is transmitting <var>n</var> in <a href="Morse Code.html">Morse Code</a>. Convert the
+                            obtained value to a letter, where A is 0, B is 1, etc., and transmit it also in morse code.
+                            Transmitted Morse is interpreted based on gaps between button holds. Holding for more than
+                            double the length of the average gap is considered to be a dash, and anything shorter is considered
+                            a dot. An E must be shorter than half of a second, and a T longer. Pressing the bulb again will switch
+                            it back to transmitting <var>n</var>.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="page-footer relative-footer">Page 4 of 6</div>
         </div>
         <div class="page">
             <div class="page-header">
@@ -1205,11 +1594,6 @@
                     <p><var>n</var> is the number of positions in the maze (width times height).</p>
                     <p>Use the arrow buttons to move the symbol to the goal position identified by the
                         value. The positions are numbered in reading order from 0 in the top-left corner.</p>
-                    <h3>Keys-in-lock</h3>
-                    <p><var>n</var> is 10. Turn the key clockwise when the last seconds digit of the bomb’s timer equals the value.</p>
-                    <h3>Switches</h3>
-                    <p><var>n</var> is the number of positions the switch can be toggled to (between 2 and 4).
-                        These positions are numbered from 0 starting from the full “up” position.</p>
                 </div>
                 <h3>3×3 mazes</h3>
                 <table class="mazes width-3">
@@ -1374,7 +1758,7 @@
                     </tr>
                 </table>
             </div>
-            <div class="page-footer relative-footer">Page 4 of 5</div>
+            <div class="page-footer relative-footer">Page 5 of 6</div>
         </div>
         <div class="page">
             <div class="page-header">
@@ -1545,7 +1929,7 @@
                     </tr>
                 </table>
             </div>
-            <div class="page-footer relative-footer">Page 5 of 5</div>
+            <div class="page-footer relative-footer">Page 6 of 6</div>
         </div>
     </div>
 </body>

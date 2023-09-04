@@ -29,31 +29,26 @@ jobs:
             npm install -g terser
             npm install -g csso-cli
             npm install -g html-minifier-terser
-            mkdir .vs
-            mkdir .vscode
-            GLOBIGNORE='.vscode:.vscode/**'
-            cp -r * .vscode
-            GLOBIGNORE='.:..'
             shopt -s globstar
             shopt -s dotglob
             shopt -s extglob
-            for i in **/*.js; do mkdir -p "./.vs/${i%/*}"; touch ".vs/$i"; terser "$i" --compress -o ".vs/$i" || echo "BAD JS: $i"; done
+            for i in **/*.js; do terser "$i" --compress -o "$i" || echo "BAD JS: $i"; done
             echo JS completed
-            for i in **/*.css; do mkdir -p "./.vs/${i%/*}"; touch ".vs/$i"; csso "$i" -o ".vs/$i" || echo "BAD CSS: $i"; done
+            for i in **/*.css; do csso "$i" -o "$i" || echo "BAD CSS: $i"; done
             echo CSS completed
-            if [ "${{ github.event_name }}" == "push" ]
+            if [ 1 == 1 ]
             then
             GLOBIGNORE='HTML/**'
             fi
-            for i in */**.html; do mkdir -p "./.vs/${i%/*}"; touch ".vs/$i"; html-minifier-terser --collapse-boolean-attributes --collapse-whitespace --minify-css --minify-js --remove-comments --remove-empty-attributes --remove-optional-tags --remove-redundant-attributes --remove-script-type-attributes --remove-style-link-type-attributes --remove-tag-whitespace --use-short-doctype "$i" -o ".vs/$i" || echo "BAD HTML: $i"; done
+            for i in */**.html; do html-minifier-terser --collapse-boolean-attributes --collapse-whitespace --minify-css --minify-js --remove-comments --remove-empty-attributes --remove-optional-tags --remove-redundant-attributes --remove-script-type-attributes --remove-style-link-type-attributes --remove-tag-whitespace --use-short-doctype "$i" -o "$i" || echo "BAD HTML: $i"; done
             GLOBIGNORE='.:..'
             echo HTML completed
-            git config user.email "KtaneContentMinifier@Timwi.de"
-            git config user.name "Minifier"
-            cp -r .vs/* .
-            for i in .vscode/**; do test -e "${i#.vscode/}" || cp "$i" "${i#.vscode/}" || echo "FILE NOT COPIED: ${i#.vscode/}"; done
+      - name: Commit
+        run: |
             git reset origin/minified
             git checkout -b minified origin/minified
             git add .
+            git config user.email "KtaneContentMinifier@Timwi.de"
+            git config user.name "Minifier"
             git commit -m "Github Action: Auto Minified files - ${{ github.sha }}" || :
             git push --recurse-submodules=check --progress --force origin minified || :
