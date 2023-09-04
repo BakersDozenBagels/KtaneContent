@@ -30,7 +30,7 @@ let FileLoadCallbacks = new HookableCallbackSet();
 
 // A list of internal port names used to convert to their display name.
 const PortNames = {
-	0: "Empty Port Plate uwu",
+	0: "Empty Port Plate",
 	RJ45: "RJ-45",
 	PS2: "PS/2",
 	StereoRCA: "Stereo RCA",
