@@ -1,9 +1,1 @@
-table {
-    margin: 1em auto;
-}
-
-#simon-legend {
-    height: 9em;
-    margin: 1em auto;
-    display: block;
-}
+#simon-legend,table{margin:1em auto}#simon-legend{height:9em;display:block}

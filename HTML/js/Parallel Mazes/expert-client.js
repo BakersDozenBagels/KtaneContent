@@ -1,1 +1,1 @@
-define((require) => new (require("./src/expert-client").ExpertClient)());
+define((require=>new(require("./src/expert-client").ExpertClient)));

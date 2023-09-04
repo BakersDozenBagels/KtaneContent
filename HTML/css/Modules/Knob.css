@@ -1,8 +1,1 @@
-.needy-diagram-label {
-    text-align: left;
-}
-
-[dir='rtl'] .needy-diagram-label {
-    text-align: right;
-}
-
+.needy-diagram-label{text-align:left}[dir=rtl] .needy-diagram-label{text-align:right}

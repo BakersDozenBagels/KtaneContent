@@ -1,17 +1,1 @@
-h3 {
-    font-weight: normal;
-    font-size: 1.25em;
-}
-h4 {
-    text-decoration: none;
-    margin-top: 3em;
-}
-em {
-    font-style: normal;
-    font-weight: bold;
-    text-decoration: none;
-}
-p { margin: .1em 0; }
-td:not(.color) { text-align: center; }
-col.number { width: 15mm; text-align: start; }
-colgroup.sequence, col.color { width: 29mm; }
+h3{font-weight:400;font-size:1.25em}em,h4{text-decoration:none}h4{margin-top:3em}em{font-style:normal;font-weight:700}p{margin:.1em 0}td:not(.color){text-align:center}col.number{width:15mm;text-align:start}col.color,colgroup.sequence{width:29mm}

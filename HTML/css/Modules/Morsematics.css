@@ -1,3 +1,1 @@
-.morseSignalImg, #morseSignalImg { width: 25em; }
-.dark :is(.morseSignalImg, #morseSignalImg) { filter: invert(85%); }
-.borderless td { text-align: center; }
+#morseSignalImg,.morseSignalImg{width:25em}.dark :is(.morseSignalImg,#morseSignalImg){filter:invert(85%)}.borderless td{text-align:center}
