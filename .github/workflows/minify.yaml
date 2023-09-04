@@ -45,7 +45,7 @@ jobs:
         run: |
             git stash -u -a
             git checkout -b minified
-            git pull -r
+            git pull --no-rebase
             git stash pop
       - name: Auto commit minified files
         uses: stefanzweifel/git-auto-commit-action@v4
